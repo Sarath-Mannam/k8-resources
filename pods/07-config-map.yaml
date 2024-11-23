@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: course-config
+data:
+  COURSE: DevOps
+  DURATON: 100HRS
+  TRAINER: MANNAM
+  
