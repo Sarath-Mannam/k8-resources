@@ -4,6 +4,5 @@ metadata:
   name: course-config
 data:
   COURSE: DevOps
-  DURATON: 100HRS
+  DURATON: 120HRS
   TRAINER: MANNAM
-  
