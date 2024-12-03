@@ -26,4 +26,5 @@ spec:
   - name: name-of-service-port
     protocol: TCP
     port: 80 # this port belongs to service
+    nodePort: 30007
     targetPort: http-web-svc # this port belongs to container
