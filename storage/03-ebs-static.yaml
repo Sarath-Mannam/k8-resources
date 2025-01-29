@@ -3,6 +3,7 @@ kind: PersistentVolume
 metadata:
   name: ebs-static
 spec:
+  storageClassName: ""
   accessModes:
   - ReadWriteOnce
   awsElasticBlockStore:
@@ -10,6 +11,48 @@ spec:
     volumeID: vol-0e6a3a85bf408fd49 # EBS Volume ID
   capacity:
     storage: 20Gi
-  # persistentVolumeReclaimPolicy: Retain
-  # storageClassName: gp2-retain
-  # volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ebs-static-pvc
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:     # these labels are deployment labels
+    app: nginx
+spec:
+  replicas: 10
+  selector:
+    matchLabels:   # these labels should match with POD
+      app: nginx
+      project: roboshop
+      component: frontend
+  template:        # This is the POD definition
+    metadata:
+      labels:
+        app: nginx
+        project: roboshop
+        component: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: nginx-html
+      volumes: # under containers creating a volume and this volume I'm getting through PVC and will mount this volume to container
+      - name: nginx-html
+        persistentVolumeClaim:
+          claimName: ebs-static-pvc
